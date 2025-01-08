@@ -4,6 +4,7 @@ import com.ll.jsb.domain.question.answer.entity.Answer;
 import com.ll.jsb.domain.question.answer.repository.AnswerRepository;
 import com.ll.jsb.domain.question.question.entity.Question;
 import com.ll.jsb.domain.question.question.repository.QuestionRepository;
+import com.ll.jsb.domain.question.question.service.QuestionService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class JsbApplicationTests {
 	@Autowired
 	private QuestionRepository questionRepository;
-
+	@Autowired
+	private QuestionService questionService;
 	@Autowired
 	private AnswerRepository answerRepository;
 
@@ -168,5 +170,16 @@ class JsbApplicationTests {
 
 		assertEquals(1, answerList.size());
 		assertEquals("네", answerList.get(0).getContent());
+	}
+
+	@Test
+	@DisplayName("대량의 테스트 데이터 만들기")
+	void t12() {
+		for (int i = 0; i < 300; i++) {
+			String subject = "테스트 데이터입니다:[%03d]".formatted(i);
+			String content = "냉무";
+
+			questionService.create(subject, content);
+		}
 	}
 }

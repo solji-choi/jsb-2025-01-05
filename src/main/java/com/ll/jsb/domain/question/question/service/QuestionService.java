@@ -4,6 +4,9 @@ import com.ll.jsb.domain.question.question.entity.Question;
 import com.ll.jsb.domain.question.question.repository.QuestionRepository;
 import com.ll.jsb.global.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +18,12 @@ public class QuestionService {
 
     public List<Question> findAll() {
         return questionRepository.findAll();
+    }
+
+    public Page<Question> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        return questionRepository.findByOrderByCreateDateDesc(pageable);
     }
 
     public Question findById(long id) {

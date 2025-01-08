@@ -7,15 +7,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,14 +20,15 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/list")
-    public String list(Model model) {
-        List<QuestionDto> questionList = questionService
-                .findAll()
-                .stream()
-                .map(QuestionDto::new)
-                .toList();
+    public String list(
+            Model model,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Page<QuestionDto> paging = questionService
+                .findAll(page)
+                .map(QuestionDto::new);
 
-        model.addAttribute("questionList", questionList);
+        model.addAttribute("paging", paging);
 
         return "/domain/question/question/question_list";
     }
